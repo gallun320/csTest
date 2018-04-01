@@ -1,0 +1,11 @@
+/Users/kazan12396/Projects/csTest/csTest/bin/Debug/netcoreapp2.0/csTest.deps.json
+/Users/kazan12396/Projects/csTest/csTest/bin/Debug/netcoreapp2.0/csTest.runtimeconfig.json
+/Users/kazan12396/Projects/csTest/csTest/bin/Debug/netcoreapp2.0/csTest.runtimeconfig.dev.json
+/Users/kazan12396/Projects/csTest/csTest/bin/Debug/netcoreapp2.0/csTest.dll
+/Users/kazan12396/Projects/csTest/csTest/bin/Debug/netcoreapp2.0/csTest.pdb
+/Users/kazan12396/Projects/csTest/csTest/obj/Debug/netcoreapp2.0/csTest.csprojResolveAssemblyReference.cache
+/Users/kazan12396/Projects/csTest/csTest/obj/Debug/netcoreapp2.0/csTest.csproj.CoreCompileInputs.cache
+/Users/kazan12396/Projects/csTest/csTest/obj/Debug/netcoreapp2.0/csTest.AssemblyInfoInputs.cache
+/Users/kazan12396/Projects/csTest/csTest/obj/Debug/netcoreapp2.0/csTest.AssemblyInfo.cs
+/Users/kazan12396/Projects/csTest/csTest/obj/Debug/netcoreapp2.0/csTest.dll
+/Users/kazan12396/Projects/csTest/csTest/obj/Debug/netcoreapp2.0/csTest.pdb
