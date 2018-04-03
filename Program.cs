@@ -31,6 +31,7 @@ namespace csTest
 
         public static async Task SendRequestMethod()
         {
+            
             var listener = new HttpListener();
 
             listener.Prefixes.Add("http://localhost:8888/");
