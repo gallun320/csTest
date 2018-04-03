@@ -9,3 +9,14 @@
 /Users/kazan12396/Projects/csTest/csTest/obj/Debug/netcoreapp2.0/csTest.AssemblyInfo.cs
 /Users/kazan12396/Projects/csTest/csTest/obj/Debug/netcoreapp2.0/csTest.dll
 /Users/kazan12396/Projects/csTest/csTest/obj/Debug/netcoreapp2.0/csTest.pdb
+/home/gallun/csTest/bin/Debug/netcoreapp2.0/csTest.deps.json
+/home/gallun/csTest/bin/Debug/netcoreapp2.0/csTest.runtimeconfig.json
+/home/gallun/csTest/bin/Debug/netcoreapp2.0/csTest.runtimeconfig.dev.json
+/home/gallun/csTest/bin/Debug/netcoreapp2.0/csTest.dll
+/home/gallun/csTest/bin/Debug/netcoreapp2.0/csTest.pdb
+/home/gallun/csTest/obj/Debug/netcoreapp2.0/csTest.csprojResolveAssemblyReference.cache
+/home/gallun/csTest/obj/Debug/netcoreapp2.0/csTest.csproj.CoreCompileInputs.cache
+/home/gallun/csTest/obj/Debug/netcoreapp2.0/csTest.AssemblyInfoInputs.cache
+/home/gallun/csTest/obj/Debug/netcoreapp2.0/csTest.AssemblyInfo.cs
+/home/gallun/csTest/obj/Debug/netcoreapp2.0/csTest.dll
+/home/gallun/csTest/obj/Debug/netcoreapp2.0/csTest.pdb

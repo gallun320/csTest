@@ -9,118 +9,116 @@ namespace csTest
 {
     class Program
     {
-        public static List<string> ReqDataCollection = new List<string>() { }; 
+        public static List<string> reqDataCollection = new List<string>() { }; 
         static void Main(string[] args)
         {
             //GetRequestMethod();
-            SendRequestMethod();
+            SendRequestMethod().Wait();
         }
 
         public static void GetRequestMethod()
         {
-            var Site = "https://google.com";
+            var site = "https://google.com";
 
-            var Req = HttpWebRequest.Create(Site);
-            var Res = Req.GetResponse();
+            var req = HttpWebRequest.Create(site);
+            var res = req.GetResponse();
 
-            using (var Stream = new StreamReader(Res.GetResponseStream(), Encoding.UTF8))
+            using (var stream = new StreamReader(res.GetResponseStream(), Encoding.UTF8))
             {
-                Console.WriteLine(Stream.ReadToEnd());
+                Console.WriteLine(stream.ReadToEnd());
             }
         }
 
-        public static void SendRequestMethod()
+        public static async Task SendRequestMethod()
         {
-            var Listener = new HttpListener();
+            var listener = new HttpListener();
 
-            Listener.Prefixes.Add("http://localhost:8888/");
-            Listener.Start();
+            listener.Prefixes.Add("http://localhost:8888/");
+            listener.Start();
             Console.WriteLine("waiting connections...");
 
-            while (true)
+            while (listener.IsListening)
             {
-                var Context = Listener.GetContext();
-                var Request = Context.Request;
-                var Respones = Context.Response;
+                var context = await listener.GetContextAsync().ConfigureAwait(false);
+                var request = context.Request;
+                var respones = context.Response;
 
 
 
 
-                var ResponseString = RequestWorker(Request);
-                var Buffer = Encoding.UTF8.GetBytes(ResponseString);
-                Respones.ContentLength64 = Buffer.Length;
-                var Output = Respones.OutputStream;
+                var responseString = RequestWorker(request);
+                var buffer = Encoding.UTF8.GetBytes(responseString);
+                respones.ContentLength64 = buffer.Length;
+                var output = respones.OutputStream;
 
-                Output.Write(Buffer, 0, Buffer.Length);
-                Output.Close();
+                output.Write(buffer, 0, buffer.Length);
+                output.Close();
             }
 
-            Listener.Stop();
+            listener.Stop();
 
         }
 
-        public static string RequestWorker(HttpListenerRequest Request)
+        public static string RequestWorker(HttpListenerRequest request)
         {
-            var ReqMethod = Request.HttpMethod;
-            var ReqUrl = Request.Url.OriginalString;
-            var Result = "";
+            var reqMethod = request.HttpMethod;
+            var reqUrl = request.Url.OriginalString;
+            var result = "";
 
 
-            switch(ReqMethod)
+            switch(reqMethod)
             {
                 case "GET":
-                    var ReqGetParams = ReqUrl.Split('/');
-                    if(Array.IndexOf(ReqGetParams, "items") > -1) 
+                    var reqGetParams = reqUrl.Split('/');
+                    if(Array.IndexOf(reqGetParams, "items") > -1) 
                     {
-                        Result = String.Join(", ", ReqDataCollection.ToArray());    
+                        result = String.Join(", ", reqDataCollection.ToArray());    
                     } 
-                    else if(Array.IndexOf(ReqGetParams, "item") > -1) 
+                    else if(Array.IndexOf(reqGetParams, "item") > -1) 
                     {
-                        var ReqGetDataIndex = Int32.Parse(ReqGetParams[ReqGetParams.Length - 1]);
-                        var ReqEl = ReqDataCollection[ReqGetDataIndex];
-                        Result = ReqEl;
+                        var reqGetDataIndex = Int32.Parse(reqGetParams[reqGetParams.Length - 1]);
+                        var reqEl = reqDataCollection[reqGetDataIndex];
+                        result = reqEl;
 
                     }
                     break;
                 case "POST":
-                    var Data = "";
-                    using ( var Stream = new StreamReader(Request.InputStream, Encoding.UTF8))
+                    var data = "";
+                    using ( var stream = new StreamReader(request.InputStream, Encoding.UTF8))
                     {
-                        Data = Stream.ReadToEnd();
+                        data = stream.ReadToEnd();
                     }
 
 
-                    ReqDataCollection.Add(Data);
-                    Result = "OK POST";
+                    reqDataCollection.Add(data);
+                    result = "OK POST";
                     break;
                 case "DELETE":
-                    var ReqDeleteParams = ReqUrl.Split('/');
-                    var ReqDeleteDataIndex = Int32.Parse(ReqDeleteParams[ReqDeleteParams.Length - 1]);
-                    if(ReqDeleteDataIndex >= 9999) 
+                    var reqDeleteParams = reqUrl.Split('/');
+                    var reqDeleteDataIndex = Int32.Parse(reqDeleteParams[reqDeleteParams.Length - 1]);
+                    if(reqDeleteDataIndex >= 9999) 
                     {
-                        ReqDataCollection.Clear();
+                        reqDataCollection.Clear();
                     }
-                    var ReqDeletEl = ReqDataCollection.Remove(ReqDataCollection[ReqDeleteDataIndex]);
-                    Result = "OK DELETE";
+                    var reqDeletEl = reqDataCollection.Remove(reqDataCollection[reqDeleteDataIndex]);
+                    result = "OK DELETE";
                     break;
                 case "PUT":
-                    var DataPut = "";
-                    var ReqPutParams = ReqUrl.Split('/');
-                    var ReqPutDataIndex = Int32.Parse(ReqPutParams[ReqPutParams.Length - 1]);
-                    using (var Stream = new StreamReader(Request.InputStream, Encoding.UTF8))
+                    var dataPut = "";
+                    var reqPutParams = reqUrl.Split('/');
+                    var reqPutDataIndex = Int32.Parse(reqPutParams[reqPutParams.Length - 1]);
+                    using (var stream = new StreamReader(request.InputStream, Encoding.UTF8))
                     {
-                        DataPut = Stream.ReadToEnd();
+                        dataPut = stream.ReadToEnd();
                     }
-                    ReqDataCollection[ReqPutDataIndex] = DataPut;
-                    Result = "OK PUT";
+                    reqDataCollection[reqPutDataIndex] = dataPut;
+                    result = "OK PUT";
                     break;
             }
 
-            var ResponseString = String.Format("<html><head><meta charset='utf8'></head><body>Привет мир! {0}</body></html>", Result);
+            var responseString = String.Format("<html><head><meta charset='utf8'></head><body>Привет мир! {0}</body></html>", result);
 
-            return ResponseString;
+            return responseString;
         }
     }
 }
-
-
