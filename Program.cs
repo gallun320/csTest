@@ -4,23 +4,23 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using RequestWorker;
+using CsTest.InterfaceWorker;
 using Ninject;
-using Utils;
+using CsTest.Utils;
 
-namespace csTest
+namespace CsTest
 {
     class Program
     {
-        private static IWorker _requestWorker;
+        private static IWorker requestWorker;
         static void Main(string[] args)
         {
             var registartion = new Registration();
             var ninjectKernel = new StandardKernel(registartion);
-            _requestWorker = ninjectKernel.Get<Worker>();
+            requestWorker = ninjectKernel.Get<IWorker>();
             
             //GetRequestMethod();
-            SendRequestMethod(_requestWorker).Wait();
+            SendRequestMethod(requestWorker).Wait();
         }
 
         public static void GetRequestMethod()
@@ -41,7 +41,7 @@ namespace csTest
             
             var listener = new HttpListener();
 
-            listener.Prefixes.Add("http://localhost:8888/");
+            listener.Prefixes.Add("http://localhost:8889/");
             listener.Start();
             Console.WriteLine("waiting connections...");
 
@@ -54,7 +54,7 @@ namespace csTest
 
 
 
-                var responseString = requestWorker.RequestWorker(request);
+                var responseString = await requestWorker.RequestWorker(request);
                 var buffer = Encoding.UTF8.GetBytes(responseString);
                 respones.ContentLength64 = buffer.Length;
                 var output = respones.OutputStream;

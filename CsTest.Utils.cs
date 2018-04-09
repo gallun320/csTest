@@ -1,8 +1,9 @@
 
 using Ninject.Modules;
-using RequestWorker;
+using CsTest.RequestWorker;
+using CsTest.InterfaceWorker;
 
-namespace Utils {
+namespace CsTest.Utils {
     class Registration : NinjectModule {
         public override void Load() 
         {
