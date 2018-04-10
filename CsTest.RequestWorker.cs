@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using CsTest.InterfaceWorker;
 using System.Linq;
-
+using CsTest.InterfaceData;
+using Ninject;
+using CsTest.Utils;
 
 namespace CsTest.RequestWorker {
     
 
     public class Worker : IWorker {
+        private IData saver;
         private static List<string> reqDataCollection = new List<string>() { }; 
         private delegate Task<string> ReqMethodDelegate(string reqUrl, HttpListenerRequest request);
         private  Dictionary<string, ReqMethodDelegate> _methods = new Dictionary<string, ReqMethodDelegate>() {
@@ -20,6 +23,8 @@ namespace CsTest.RequestWorker {
             {"DELETE", DeleteRequestWorker},
             {"PUT", PutRequestWorker}
         };
+
+        
 
         public async Task<string> RequestWorker(HttpListenerRequest request)
         {
