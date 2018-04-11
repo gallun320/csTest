@@ -9,24 +9,20 @@ using System.Linq;
 
 namespace CsTest.SaveData {
     public class Save : IData {
-        private object locker = new Object();
+        private readonly SemaphoreSlim m_lock = new SemaphoreSlim(1,1);
         public async Task<int> SetData(string data) 
         {
-            var buffer = Encoding.UTF8.GetBytes(data);
+            //var buffer = Encoding.UTF8.GetBytes(data);
+
+            await m_lock.WaitAsync();
 
             try
             {
-                Monitor.Enter(locker);
-
-                using(var fs = new FileStream(@"db.txt", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, buffer.Length))
-                using(var stream = new StreamWriter(fs, Encoding.UTF8))
-                {
-                    await stream.WriteLineAsync(data.ToArray(), 0, data.Length).ConfigureAwait(false);
-                }
+               await File.AppendAllTextAsync(@"db.txt", data + Environment.NewLine);
             }
             finally
             {
-                Monitor.Exit(locker);
+                m_lock.Release();
             }
             
 
@@ -37,21 +33,23 @@ namespace CsTest.SaveData {
         {
             
             var data = new List<string>();
+            await m_lock.WaitAsync();
+
             try
             {
-                Monitor.Enter(locker);
-                using(var fs = new FileStream(@"db.txt", FileMode.Open, FileAccess.Read))
-                using(var stream = new StreamReader(fs, Encoding.UTF8))
-                {
-                    foreach (var i in await stream.ReadLineAsync())
+                
+                
+
+                    foreach (var i in await File.ReadAllLinesAsync(@"db.txt"))
                     {
-                        data.Add(i.ToString());
+                        data.Add(i);
                     }
-                }
+                    
+                
             } 
             finally
             {
-                Monitor.Exit(locker);
+                 m_lock.Release();
             }
 
             return data;

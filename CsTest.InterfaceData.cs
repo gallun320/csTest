@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace CsTest.InterfaceData {
     
-    interface IData 
+    public interface IData 
     {
         Task<int> SetData(string data);
         Task<List<string>> GetData();
