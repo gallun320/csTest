@@ -9,30 +9,37 @@ using System.Linq;
 using CsTest.InterfaceData;
 using Ninject;
 using CsTest.Utils;
+using CsTest.Requester.InterfaceRequest;
+using CsTest.Pattern;
 
-namespace CsTest.RequestWorker {
+namespace CsTest.Request {
     
 
-    public class Worker : IWorker {
-        private IData saver;
-        private static List<string> reqDataCollection = new List<string>() { }; 
-        private delegate Task<string> ReqMethodDelegate(string reqUrl, HttpListenerRequest request, IData saver);
-        private  Dictionary<string, ReqMethodDelegate> _methods = new Dictionary<string, ReqMethodDelegate>() {
-            {"GET", GetRequestWorker},
-            {"POST", PostRequestWorker},
-            {"DELETE", DeleteRequestWorker},
-            {"PUT", PutRequestWorker}
+    public class RequestWorker : IRequestWorker {
+        private IDbWorker saver;
+        private IVisitor visitor;
+        private static IGetRequest getWorker;
+        private static IPostRequest postWorker;
+        private static IPutRequest putWorker;
+        private static IDeleteRequest deleteWorker;
+        private static List<string> reqDataCollection = new List<string>() { };
+        private  Dictionary<string, dynamic> methods = new Dictionary<string, dynamic>() {
+            {"GET", getWorker},
+            {"POST", postWorker},
+            {"DELETE", putWorker},
+            {"PUT", deleteWorker}
         };
 
-        public Worker()
+        public RequestWorker()
         {
             var registartion = new Registration();
             var ninjectKernel = new StandardKernel(registartion);
-            saver = ninjectKernel.Get<IData>();
+            saver = ninjectKernel.Get<IDbWorker>();
+            visitor = ninjectKernel.Get<IVisitor>();
         }
         
 
-        public async Task<string> RequestWorker(HttpListenerRequest request)
+        public async Task<string> Worker(HttpListenerRequest request)
         {
             var reqMethod = request.HttpMethod;
             var reqUrl = request.Url.OriginalString;
@@ -40,9 +47,11 @@ namespace CsTest.RequestWorker {
 
             var result = "";
             
-            if(_methods.TryGetValue(reqMethod, out var func)) 
+            if(methods.TryGetValue(reqMethod, out var worker)) 
             {
-                result = await func(reqUrl, request, saver);
+
+                result = await visitor.Visit(worker, reqUrl, request, saver);
+                
             } 
             else
             {
@@ -56,7 +65,7 @@ namespace CsTest.RequestWorker {
             return responseString;
         }
 
-        public static async Task<string> GetRequestWorker(string reqUrl, HttpListenerRequest request, IData saver)
+        public static async Task<string> GetRequestWorker(string reqUrl, HttpListenerRequest request, IDbWorker saver)
         {
 
             var result = "";
@@ -84,7 +93,7 @@ namespace CsTest.RequestWorker {
             return result;
         }
 
-        public static async Task<string> PostRequestWorker(string reqUrl, HttpListenerRequest request, IData saver)
+        public static async Task<string> PostRequestWorker(string reqUrl, HttpListenerRequest request, IDbWorker saver)
         {
             var result = "";
             var data = "";
@@ -99,7 +108,7 @@ namespace CsTest.RequestWorker {
             return result;
         }
 
-        public static async Task<string> DeleteRequestWorker(string reqUrl, HttpListenerRequest request, IData saver)
+        public static async Task<string> DeleteRequestWorker(string reqUrl, HttpListenerRequest request, IDbWorker saver)
         {
             var result = "";
             var reqDeleteDataIndex =  int.Parse(reqUrl.Split('/').Last());
@@ -113,7 +122,7 @@ namespace CsTest.RequestWorker {
             return result;
         }
 
-        public static async Task<string> PutRequestWorker(string reqUrl, HttpListenerRequest request, IData saver)
+        public static async Task<string> PutRequestWorker(string reqUrl, HttpListenerRequest request, IDbWorker saver)
         {
             var result = "";
             var dataPut = "";

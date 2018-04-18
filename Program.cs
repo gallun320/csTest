@@ -12,12 +12,12 @@ namespace CsTest
 {
     class Program
     {
-        private static IWorker requestWorker;
+        private static IRequestWorker requestWorker;
         static void Main(string[] args)
         {
             var registartion = new Registration();
             var ninjectKernel = new StandardKernel(registartion);
-            requestWorker = ninjectKernel.Get<IWorker>();
+            requestWorker = ninjectKernel.Get<IRequestWorker>();
             
             //GetRequestMethod();
             SendRequestMethod(requestWorker).Wait();
@@ -36,12 +36,12 @@ namespace CsTest
             }
         }
 
-        public static async Task SendRequestMethod(IWorker requestWorker)
+        public static async Task SendRequestMethod(IRequestWorker requestWorker)
         {
             
             var listener = new HttpListener();
 
-            listener.Prefixes.Add("http://localhost:8889/");
+            listener.Prefixes.Add("http://localhost:8888/");
             listener.Start();
             Console.WriteLine("waiting connections...");
 
@@ -54,7 +54,7 @@ namespace CsTest
 
 
 
-                var responseString = await requestWorker.RequestWorker(request);
+                var responseString = await requestWorker.Worker(request);
                 var buffer = Encoding.UTF8.GetBytes(responseString);
                 respones.ContentLength64 = buffer.Length;
                 var output = respones.OutputStream;
