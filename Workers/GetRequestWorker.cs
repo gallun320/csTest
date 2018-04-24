@@ -9,7 +9,7 @@ using System.Linq;
 using CsTest.InterfaceData;
 using Ninject;
 using CsTest.Utils;
-using CsTest.Requester.InterfaceRequest;
+using CsTest.Requester;
 
 
 namespace CsTest.Workers.Requests  

@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using System.Net;
 using CsTest.InterfaceData;
-using CsTest.Requester.InterfaceRequest;
+using CsTest.Requester;
 
 
-namespace CsTest.Requester.InterfaceRequest 
+namespace CsTest.Requester 
 {
     public interface IPutRequest : IRequest {  }
 }

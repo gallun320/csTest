@@ -4,9 +4,10 @@ using CsTest.Request;
 using CsTest.InterfaceWorker;
 using CsTest.InterfaceData;
 using CsTest.Db;
-using CsTest.Requester.InterfaceRequest;
+using CsTest.Requester;
 using CsTest.Workers.Requests;
 using CsTest.Pattern;
+using CsTest.InterfacePattern;
 
 namespace CsTest.Utils {
     class Registration : NinjectModule {

@@ -3,7 +3,7 @@ using System.Net;
 using CsTest.InterfaceData;
 
 
-namespace CsTest.Requester.InterfaceRequest 
+namespace CsTest.Requester 
 {
     public interface IRequest
     {

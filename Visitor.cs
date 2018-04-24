@@ -1,12 +1,14 @@
 
-using CsTest.Pattern;
-using CsTest.Requester.InterfaceRequest;
+using CsTest.InterfacePattern;
+using CsTest.Requester;
 using System.Threading.Tasks;
 using CsTest.Utils;
 using Ninject;
 using System.Net;
 using CsTest.InterfaceData;
 using System;
+using CsTest.Workers.Requests;
+
 
 namespace CsTest.Pattern
 {
@@ -18,28 +20,24 @@ namespace CsTest.Pattern
         HttpListenerRequest vRequest;
         IDbWorker vSaver;
 
-        public async Task<string> Visit(IGetRequest getWorker)
+        public async Task<string> Visit(GetRequestWorker getWorker)
         {
-            var worker = ninjectKernel.Get<IGetRequest>();
-            return await worker.Worker(vReqUrl, vRequest, vSaver);
+            return await getWorker.Worker(vReqUrl, vRequest, vSaver);
         }
 
-        public async Task<string> Visit(IPostRequest postWorker)
+        public async Task<string> Visit(PostRequestWorker postWorker)
         {
-            var worker = ninjectKernel.Get<IPostRequest>();
-            return await worker.Worker(vReqUrl, vRequest, vSaver);
+            return await postWorker.Worker(vReqUrl, vRequest, vSaver);
         }
 
-        public async Task<string> Visit(IPutRequest putWorker)
+        public async Task<string> Visit(PutRequestWorker putWorker)
         {
-            var worker = ninjectKernel.Get<IPutRequest>();
-            return await worker.Worker(vReqUrl, vRequest, vSaver);
+            return await putWorker.Worker(vReqUrl, vRequest, vSaver);
         }
 
-        public async Task<string> Visit(IDeleteRequest deleteWorker)
+        public async Task<string> Visit(DeleteRequestWorker deleteWorker)
         {
-            var worker = ninjectKernel.Get<IDeleteRequest>();
-            return await worker.Worker(vReqUrl, vRequest, vSaver);
+            return await deleteWorker.Worker(vReqUrl, vRequest, vSaver);
         }
 
         public async Task<string> Visit(dynamic worker, string reqUrl, HttpListenerRequest request, IDbWorker saver)

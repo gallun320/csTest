@@ -6,6 +6,7 @@ using System.Threading;
 using System.Text;
 using System;
 using System.Linq;
+using CsTest.Context;
 
 
 namespace CsTest.Db {
@@ -16,6 +17,10 @@ namespace CsTest.Db {
 
         public DbWorker () 
         {
+            using(var db = new SaveContext())
+                {
+                   
+                }
            Init();
         }
 
@@ -55,12 +60,8 @@ namespace CsTest.Db {
             try
             {
                 
-                
 
-                    foreach (var i in await File.ReadAllLinesAsync(@"db.txt"))
-                    {
-                        data.Add(i);
-                    }
+                    
                     
                 
             } 
