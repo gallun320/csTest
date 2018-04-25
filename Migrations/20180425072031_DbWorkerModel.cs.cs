@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace csTest.Migrations
 {
-    public partial class SaveModel : Migration
+    public partial class DbWorkerModelcs : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

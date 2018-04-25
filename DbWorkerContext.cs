@@ -4,9 +4,9 @@ using CsTest.Model;
 
 namespace CsTest.Context
 {
-    public class  SaveContext : DbContext
+    public class  DbWorkerContext : DbContext
     {
-        public DbSet<SaveModel> Model { get; set; }
+        public DbSet<DbWorkerModel> Model { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

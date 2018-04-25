@@ -8,6 +8,11 @@ namespace CsTest.InterfaceData {
     {
         Task<int> SetData(string data);
         Task<List<string>> GetData();
+        Task<int> DeleteData(int idx);
+        Task<int> DeleteData();
+
+        Task<int> UpdateData(int idx, string data);
+
     }
         
     

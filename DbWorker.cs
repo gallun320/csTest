@@ -7,6 +7,8 @@ using System.Text;
 using System;
 using System.Linq;
 using CsTest.Context;
+using CsTest.Model;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace CsTest.Db {
@@ -17,10 +19,7 @@ namespace CsTest.Db {
 
         public DbWorker () 
         {
-            using(var db = new SaveContext())
-                {
-                   
-                }
+            
            Init();
         }
 
@@ -37,7 +36,11 @@ namespace CsTest.Db {
 
             try
             {
-               await File.AppendAllTextAsync(@"db.txt", data + Environment.NewLine);
+               using(var db = new DbWorkerContext())
+               {
+                   await db.AddAsync(new DbWorkerModel() { Text = data});
+                   await db.SaveChangesAsync();
+               }
                dbCollection.Add(data);
             }
             finally
@@ -46,6 +49,80 @@ namespace CsTest.Db {
             }
             
 
+            return 0;
+        }
+
+        public async Task<int> UpdateData(int idx, string data)
+        {
+            await m_lock.WaitAsync();
+
+            try 
+            {
+                using(var db = new DbWorkerContext())
+                {
+                    db.Model.Update(new DbWorkerModel() { Id = idx, Text = data });
+                    await db.SaveChangesAsync();
+                }
+                dbCollection[idx - 1] = data;
+            }
+            catch(InvalidDataException)
+            {
+              if(dbCollection.Count > 0) await SetData(data);
+              else dbCollection.Add(data);
+            }
+            finally
+            {
+                m_lock.Release();
+            }
+
+
+            return 0;
+        } 
+
+        public async Task<int> DeleteData(int idx)
+        {
+            await m_lock.WaitAsync();
+
+            try 
+            {
+                using(var db = new DbWorkerContext())
+                {
+                    db.Model.Remove(new DbWorkerModel() { Id = idx });
+                    await db.SaveChangesAsync();
+                }
+                dbCollection.RemoveAt(idx - 1);
+            }
+            catch(InvalidOperationException)
+            {
+                Console.WriteLine("Elemnt is not defined in db");
+            }
+            finally
+            {
+                m_lock.Release();
+            }
+            
+            return 0;
+        }
+
+        public async Task<int> DeleteData()
+        {
+            await m_lock.WaitAsync();
+
+            try
+            {
+                using(var db = new DbWorkerContext())
+                {
+                    var data = await db.Model.ToListAsync();
+                    db.Model.RemoveRange(data);
+                    await db.SaveChangesAsync();
+                }
+
+                dbCollection.Clear();
+            }
+            finally
+            {
+                m_lock.Release();
+            }
             return 0;
         }
 
@@ -59,9 +136,12 @@ namespace CsTest.Db {
 
             try
             {
-                
+                DbWorkerModel bbData = new DbWorkerModel();
 
-                    
+                using(var db = new DbWorkerContext())
+                {
+                    data = await db.Model.Select(item => item.Text).ToListAsync();
+                }
                     
                 
             } 
@@ -69,6 +149,8 @@ namespace CsTest.Db {
             {
                  m_lock.Release();
             }
+
+
 
             return data;
         }

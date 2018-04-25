@@ -9,17 +9,16 @@ using System;
 
 namespace csTest.Migrations
 {
-    [DbContext(typeof(SaveContext))]
-    [Migration("20180424143336_SaveModel")]
-    partial class SaveModel
+    [DbContext(typeof(DbWorkerContext))]
+    partial class DbWorkerContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
-            modelBuilder.Entity("CsTest.Model.SaveModel", b =>
+            modelBuilder.Entity("CsTest.Model.DbWorkerModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();

@@ -26,13 +26,12 @@ namespace CsTest.Workers.Requests
         {
             var result = "";
             var reqDeleteDataIndex =  int.Parse(reqUrl.Split('/').Last());
-            var reqDataCollection = await saver.GetData().ConfigureAwait(false);
             
             if(reqDeleteDataIndex >= 9999) 
             {
-                reqDataCollection.Clear();
+                await saver.DeleteData().ConfigureAwait(false);
             }
-            var reqDeletEl = reqDataCollection.Remove(reqDataCollection[reqDeleteDataIndex]);
+            await saver.DeleteData(reqDeleteDataIndex).ConfigureAwait(false);
             result = "OK DELETE";
             return result;
         }

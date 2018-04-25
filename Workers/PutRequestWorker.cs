@@ -28,14 +28,14 @@ namespace CsTest.Workers.Requests
             var result = "";
             var dataPut = "";
             var reqPutDataIndex =  int.Parse(reqUrl.Split('/').Last());
-            var rt = await saver.GetData().ConfigureAwait(false);
 
             using (var stream = new StreamReader(request.InputStream, Encoding.UTF8))
             {
                 dataPut = await stream.ReadToEndAsync();
             }
-
-            rt[reqPutDataIndex] = dataPut;
+       
+            await saver.UpdateData(reqPutDataIndex, dataPut).ConfigureAwait(false);
+            
             result = "OK PUT";
             return result;
         }
