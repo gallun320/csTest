@@ -10,11 +10,12 @@ using CsTest.InterfaceData;
 using Ninject;
 using CsTest.Utils;
 using CsTest.Requester;
-
+using CsTest.Attributes;
 
 
 namespace CsTest.Workers.Requests 
 {
+    [HttpMethod("Delete")]
     class DeleteRequestWorker : IDeleteRequest 
     {
         public string reqUrl {get; set;}

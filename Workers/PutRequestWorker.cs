@@ -10,11 +10,12 @@ using CsTest.InterfaceData;
 using Ninject;
 using CsTest.Utils;
 using CsTest.Requester;
+using CsTest.Attributes;
 
 
-
-namespace CsTest.Workers.Requests 
+namespace CsTest.Workers.Requests  
 {
+    [HttpMethod("PUT")]
     class PutRequestWorker : IPutRequest
     {
 

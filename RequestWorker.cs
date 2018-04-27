@@ -13,6 +13,7 @@ using CsTest.Requester;
 using CsTest.Pattern;
 using CsTest.Workers.Requests;
 using CsTest.InterfacePattern;
+using CsTest.Extentions;
 
 
 namespace CsTest.Request {
@@ -22,12 +23,6 @@ namespace CsTest.Request {
         private IDbWorker saver;
         private IVisitor visitor;
         private StandardKernel ninjectKernel;
-        private  Dictionary<string, dynamic> methods = new Dictionary<string, dynamic>() {
-            {"GET", new GetRequestWorker()},
-            {"POST", new PostRequestWorker()},
-            {"DELETE", new DeleteRequestWorker()},
-            {"PUT", new PutRequestWorker()}
-        };
 
         public RequestWorker()
         {
@@ -47,7 +42,7 @@ namespace CsTest.Request {
 
             var result = "";
             
-            if(methods.TryGetValue(reqMethod, out var worker)) 
+            if(reqMethod.TryGetRequestClass<IRequest>(out var worker)) 
             {
 
                 result = await visitor.Visit(worker, reqUrl, request, saver);
@@ -55,14 +50,14 @@ namespace CsTest.Request {
             } 
             else
             {
-                return "<html><head><meta charset='utf8'></head><body>Привет мир!</body></html>";
+                return result.ConverResult();
             }
 
             
 
             var responseString = string.Format("<html><head><meta charset='utf8'></head><body>Привет мир! {0}</body></html>", result);
 
-            return responseString;
+            return result.ConverResult();
         }
 
     } 

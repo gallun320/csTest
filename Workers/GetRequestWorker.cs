@@ -10,10 +10,11 @@ using CsTest.InterfaceData;
 using Ninject;
 using CsTest.Utils;
 using CsTest.Requester;
-
+using CsTest.Attributes;
 
 namespace CsTest.Workers.Requests  
 {
+    [HttpMethod("GET")]
     class GetRequestWorker : IGetRequest 
     {
         public string reqUrl {get; set;}
